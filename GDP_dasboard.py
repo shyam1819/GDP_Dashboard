@@ -32,6 +32,7 @@ def sum_gdp(df,center):
 
 
 center=st.selectbox("Select year:",("2019","2020","2021"))
+
 if center=="2019":
     total_gdp,h=sum_gdp(df,center)
     h1=h.iloc[0]
@@ -76,15 +77,18 @@ st.markdown("---")
 L_column, M_column,R_column=st.columns([2,4,3])
 
 with L_column:
+    st.subheader("GDP of top ten nations in {}".format(center))
     t10=df.nlargest(10,[center])
     t10.style.hide_index()
     st.write(t10[["Country Name",center]])
 with M_column:
+    st.subheader("Continent wise contribution to net GDP")
     C=df.groupby(["Continent"])[center].sum().reset_index(name="Total")
     fig=px.pie(C,names="Continent",values="Total")
     #plt.figure(figsize=(4,4))
     st.plotly_chart(fig)
 with R_column:
+    st.subheader("Top 3 nations in every continent")
     G=df.groupby(["Continent"])[center].nlargest(3).reset_index(name="Values")
     g=pd.DataFrame()
     g=g.append([df.loc[i] for i in G["level_1"].unique()])
@@ -97,6 +101,7 @@ with R_column:
 
 st.markdown("---")
 
+st.subheader("GDP value of nations from the year 1960-2021")
 code=st.multiselect("Select countries codes:",options=["IND","CHN","JPN","USA","FRA","CAN","GBR"],default=["IND"])
 df_selection=df.query("Code==@code")
 df_selection=df_selection.T
